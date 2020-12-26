@@ -5,6 +5,7 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <UseWPF>True</UseWPF>
         <UseWindowsForms>true</UseWindowsForms>
+        <OutputType>WinExe</OutputType>
     </PropertyGroup>
 
 </Project>

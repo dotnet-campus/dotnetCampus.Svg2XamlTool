@@ -1,0 +1,40 @@
+﻿<Window x:Class="dotnetCampus.Svg2XamlTool.ManagerWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" Title="管理矢量图" Width="800" Height="300">
+    <FrameworkElement.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="DarkGray" />
+        </Style>
+    </FrameworkElement.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
+            <ToggleButton Name="SettingToggleButton" IsChecked="False" Content="Setting" Width="100" Height="30" HorizontalAlignment="Left" />
+            <Button Name="ShowAllButton" Content="ShowAll" Width="100" Height="30" HorizontalAlignment="Left" Click="ShowAllButton_OnClick"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+
+            <Grid Name="MainGrid" Background="Transparent" AllowDrop="True" Drop="MainGrid_OnDrop">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="拖拽SVG到此以更新资源" FontSize="36" HorizontalAlignment="Center" />
+                    <TextBlock Text="SVG 需要命名为 Image.* 或 Geometry.*" />
+                    <TextBlock Name="InfoTextBlock" Foreground="Crimson" />
+                </StackPanel>
+            </Grid>
+
+            <Grid Name="SettingGrid" Background="#F1F1F1"
+                    Visibility="{Binding IsChecked, ElementName=SettingToggleButton,Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel Margin="20">
+                    <TextBox Name="ImagePathTextBox" AcceptsReturn="True" TextWrapping="Wrap" Height="50" />
+                    <Button Name="SaveSettingButton" Click="SaveSettingButton_OnClick" Content="Save" Margin="0 6" Height="30" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
