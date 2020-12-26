@@ -13,8 +13,6 @@ namespace dotnetCampus.Svg2XamlTool
     /// </summary>
     public partial class IconView : Window
     {
-        protected List<IconModel> Icons = new List<IconModel>();
-
         public IconView(List<ResourceDictionary> dictionaries)
         {
             InitializeComponent();
@@ -24,27 +22,35 @@ namespace dotnetCampus.Svg2XamlTool
                 AddDict(dict);
             }
 
+            // 覆盖绑定内容，在 xaml 的版本只是为了智能提示
             IconControl.ItemsSource = Icons;
             var cv = CollectionViewSource.GetDefaultView(IconControl.ItemsSource);
             cv.GroupDescriptions.Add(new PropertyGroupDescription("Group"));
         }
 
+        public List<IconModel> Icons { get; } = new List<IconModel>();
+
         private void AddDict(ResourceDictionary dict)
         {
             var dictName = dict.Source.ToString().Split('/').Last();
             var drawingImages = dict.OfType<DictionaryEntry>().Where(de => de.Value is DrawingImage)
-                .Select(de => new IconModel { DrawingImage = (DrawingImage)de.Value, Key = (string)de.Key, Group = dictName, Source = dict.Source.AbsolutePath }).OrderBy(de => de.Key).ToList();
+                .Select(dictionaryEntry => new IconModel
+                {
+                    DrawingImage = (DrawingImage) dictionaryEntry.Value, Key = (string) dictionaryEntry.Key, Group = dictName,
+                    Source = dict.Source.AbsolutePath
+                }).OrderBy(de => de.Key).ToList();
 
             Icons.AddRange(drawingImages);
             var drawingImages2 = dict.OfType<DictionaryEntry>().Where(de => de.Value is Geometry).Select(de =>
             {
-                var gd = new GeometryDrawing { Pen = null, Geometry = (Geometry)de.Value };
-                BindingOperations.SetBinding(gd, GeometryDrawing.BrushProperty, new Binding("Foreground") { Source = this });
+                var geometryDrawing = new GeometryDrawing {Pen = null, Geometry = (Geometry) de.Value};
+                BindingOperations.SetBinding(geometryDrawing, GeometryDrawing.BrushProperty,
+                    new Binding("Foreground") {Source = this});
                 return new IconModel
                 {
-                    Key = (string)de.Key,
+                    Key = (string) de.Key,
                     Group = dictName,
-                    DrawingImage = new DrawingImage(gd),
+                    DrawingImage = new DrawingImage(geometryDrawing),
                     Source = dict.Source.AbsolutePath
                 };
             }).OrderBy(de => de.Key);

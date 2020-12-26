@@ -18,28 +18,21 @@ namespace dotnetCampus.Svg2XamlTool
     /// </summary>
     public partial class ManagerWindow : Window
     {
-        protected static string AppPath;
-        protected static string SettingFile;
+        private static string AppPath {  get; }
+        private static string SettingFile {  get; }
         static ManagerWindow()
         {
             AppPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SvgTool");
             SettingFile = Path.Combine(AppPath, "Setting.config");
 
-            if (!Directory.Exists(AppPath))
-            {
-                Directory.CreateDirectory(AppPath);
-            }
+            Directory.CreateDirectory(AppPath);
         }
 
-        protected readonly List<ResourceDictionary> AllDictList = new List<ResourceDictionary>();
-        protected readonly List<ResourceDictionary> UpdateDictList = new List<ResourceDictionary>();
+        private readonly List<ResourceDictionary> _allDictList = new List<ResourceDictionary>();
+        private readonly List<ResourceDictionary> _updateDictList = new List<ResourceDictionary>();
         public ManagerWindow()
         {
             InitializeComponent();
-
-            ImagePathTextBox.Text += @"D:\Projects\IIP-Win\EasiNote\Dependencies\EasiUI\Code\Cvte.EasiUI\Images";
-            ImagePathTextBox.Text += Environment.NewLine;
-            ImagePathTextBox.Text += @"D:\Projects\IIP-Win\EasiNote\Code\Core\EasiNote.Resources\Images";
 
             Loaded += ManagerWindow_Loaded;
         }
@@ -60,7 +53,7 @@ namespace dotnetCampus.Svg2XamlTool
         private void GetDictList(string setting)
         {
             var folders = setting.Split('\n', '\r');
-            AllDictList.Clear();
+            _allDictList.Clear();
             foreach (var folder in folders)
             {
                 if (Directory.Exists(folder))
@@ -68,7 +61,7 @@ namespace dotnetCampus.Svg2XamlTool
                     var files = Directory.GetFiles(folder);
                     foreach (var file in files)
                     {
-                        AllDictList.Add(new ResourceDictionary { Source = new Uri(file) });
+                        _allDictList.Add(new ResourceDictionary { Source = new Uri(file) });
                     }
                 }
             }
@@ -122,9 +115,9 @@ namespace dotnetCampus.Svg2XamlTool
                     }
                     var drawingImage = new DrawingImage(drawing);
 
-                    var resourceDictionary = AllDictList.FirstOrDefault(x => x.Contains(svgFileName) && x.MergedDictionaries.Count < 1)
-                        ?? AllDictList.FirstOrDefault(x => SvgMatchDict(x, svgFileName))
-                        ?? AllDictList.OrderBy(x => x.Count).LastOrDefault();
+                    var resourceDictionary = _allDictList.FirstOrDefault(x => x.Contains(svgFileName) && x.MergedDictionaries.Count < 1)
+                        ?? _allDictList.FirstOrDefault(x => SvgMatchDict(x, svgFileName))
+                        ?? _allDictList.OrderBy(x => x.Count).LastOrDefault();
                     if (resourceDictionary != null)
                     {
                         if (svgFileName.StartsWith("Image."))
@@ -145,9 +138,9 @@ namespace dotnetCampus.Svg2XamlTool
                             }
                         }
 
-                        if (!UpdateDictList.Contains(resourceDictionary))
+                        if (!_updateDictList.Contains(resourceDictionary))
                         {
-                            UpdateDictList.Add(resourceDictionary);
+                            _updateDictList.Add(resourceDictionary);
                         }
                     }
                 }
@@ -162,7 +155,7 @@ namespace dotnetCampus.Svg2XamlTool
 
         private void Save()
         {
-            foreach (var dict in UpdateDictList)
+            foreach (var dict in _updateDictList)
             {
                 var xaml = GetXaml(dict);
 
@@ -207,7 +200,7 @@ namespace dotnetCampus.Svg2XamlTool
 
         private void ShowAllButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var iconWin=new IconView(AllDictList);
+            var iconWin=new IconView(_allDictList);
             iconWin.Show();
         }
     }

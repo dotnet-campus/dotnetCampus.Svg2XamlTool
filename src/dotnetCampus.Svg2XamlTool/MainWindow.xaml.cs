@@ -16,9 +16,6 @@ namespace dotnetCampus.Svg2XamlTool
 {
     public partial class MainWindow : Window
     {
-        private readonly FileSvgReader _fileSvgReader;
-        private readonly string _tempXamlFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Temp", "Svg2XamlTemp.xaml");
-
         public MainWindow()
         {
             InitializeComponent();
@@ -27,6 +24,9 @@ namespace dotnetCampus.Svg2XamlTool
             wpfSettings.CultureInfo = wpfSettings.NeutralCultureInfo;
             _fileSvgReader = new FileSvgReader(wpfSettings);
         }
+
+        private readonly FileSvgReader _fileSvgReader;
+        private readonly string _tempXamlFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Temp", "Svg2XamlTemp.xaml");
 
         /// <summary>
         /// 处理拖拽导入的SVG文件
@@ -50,21 +50,20 @@ namespace dotnetCampus.Svg2XamlTool
                     Drawing drawing = _fileSvgReader.GetDrawingGroup(svg);
 
                     //去掉冗余的层次
-                    while (drawing is DrawingGroup && (((DrawingGroup)drawing).Children.Count == 1))
+                    while (drawing is DrawingGroup drawingGroup && (drawingGroup.Children.Count == 1))
                     {
-                        var dgroup = (DrawingGroup)drawing;
-                        var dr = dgroup.Children[0];
+                        var dr = drawingGroup.Children[0];
                         if (dr != null)
                         {
-                            if (dgroup.Transform != null)
+                            if (drawingGroup.Transform != null)
                             {
-                                if (dr is DrawingGroup)
+                                if (dr is DrawingGroup @group)
                                 {
-                                    ((DrawingGroup)dr).Transform = dgroup.Transform;
+                                    @group.Transform = drawingGroup.Transform;
                                 }
-                                else if (dr is GeometryDrawing)
+                                else if (dr is GeometryDrawing geometryDrawing)
                                 {
-                                    ((GeometryDrawing)dr).Geometry.Transform = dgroup.Transform;
+                                    geometryDrawing.Geometry.Transform = drawingGroup.Transform;
                                 }
                             }
                             drawing = dr;
@@ -75,20 +74,18 @@ namespace dotnetCampus.Svg2XamlTool
                         }
                     }
                     var drawingImage = new DrawingImage(drawing);
-                    if (drawing is GeometryDrawing)
+                    if (drawing is GeometryDrawing geometryDrawing1)
                     {
-                        var geometryDraing = (GeometryDrawing)drawing;
-                        var geo = geometryDraing.Geometry as PathGeometry;
-                        if (geo != null)
+                        if (geometryDrawing1.Geometry is PathGeometry geo)
                         {
                             var pathGeometry = new PathGeometry();
                             foreach (var figure in geo.Figures)
                             {
                                 pathGeometry.Figures.Add(figure);
                             }
-                            var combineGeometry = Geometry.Combine(Geometry.Empty, pathGeometry, GeometryCombineMode.Union, geometryDraing.Geometry.Transform);
-                            geometryDraing.Geometry = combineGeometry;
-                            drawing = geometryDraing;
+                            var combineGeometry = Geometry.Combine(Geometry.Empty, pathGeometry, GeometryCombineMode.Union, geometryDrawing1.Geometry.Transform);
+                            geometryDrawing1.Geometry = combineGeometry;
+                            drawing = geometryDrawing1;
                         }
                     }
 
@@ -107,16 +104,16 @@ namespace dotnetCampus.Svg2XamlTool
                     };
 
                     IconsContainer.Children.Add(image);
-                    HintText.Text = String.Empty;
+                    HintText.Text = string.Empty;
 
                     sb.Append(xaml);
                     sb.Append(Environment.NewLine);
                     sb.Append(Environment.NewLine);
-                    sb.Replace("<DrawingImage xmlns", string.Format("<DrawingImage x:Key=\"{0}\" xmlns", svgFileName));
+                    sb.Replace("<DrawingImage xmlns", $"<DrawingImage x:Key=\"{svgFileName}\" xmlns");
                 }
 
                 //替换掉不需要的字符串
-                sb.Replace(" xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"", String.Empty);
+                sb.Replace(" xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"", string.Empty);
                 sb.Replace(" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\"", String.Empty);
                 sb.Replace(" xmlns:svg=\"http://sharpvectors.codeplex.com/runtime/\"", String.Empty);
                 sb.Replace(" Pen=\"{x:Null}\"", string.Empty);

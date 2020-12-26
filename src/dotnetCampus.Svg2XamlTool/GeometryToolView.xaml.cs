@@ -17,7 +17,7 @@ namespace dotnetCampus.Svg2XamlTool
     /// </summary>
     public partial class GeometryToolView : UserControl
     {
-        public string StandardPrefix = "MCQL";
+        public const string StandardPrefix = "MCQL";
 
         public string MiniLang
         {
@@ -30,7 +30,7 @@ namespace dotnetCampus.Svg2XamlTool
             InitializeComponent();
         }
 
-        private void BtnShow_OnClick(object sender, RoutedEventArgs e)
+        private void ShowButton_OnClick(object sender, RoutedEventArgs e)
         {
             MiniLang = FormattedMiniLanguage(MiniLang);
             ShowInPath(MiniLang);
@@ -43,7 +43,8 @@ namespace dotnetCampus.Svg2XamlTool
                 var geometry = Geometry.Parse(miniLang);
                 ShowerPath.Data = geometry;
                 var bounds = geometry.Bounds;
-                InfoTextBlock.Text = $"起点 {(int)bounds.Left},{(int)bounds.Top}  宽高 {(int)bounds.Width},{(int)bounds.Height}";
+                InfoTextBlock.Text =
+                    $"起点 {(int) bounds.Left},{(int) bounds.Top}  宽高 {(int) bounds.Width},{(int) bounds.Height}";
             }
             catch (Exception)
             {
@@ -102,7 +103,7 @@ namespace dotnetCampus.Svg2XamlTool
                 var prefix = item[0].ToString(CultureInfo.InvariantCulture);
                 if (StandardPrefix.Contains(prefix))
                 {
-                    tempItem = item[0] + TranslateXandY(item.Substring(1), xChange, yChange);
+                    tempItem = item[0] + TranslateXAndY(item.Substring(1), xChange, yChange);
                 }
                 else if (prefix == "H" || prefix == "V")
                 {
@@ -110,14 +111,16 @@ namespace dotnetCampus.Svg2XamlTool
                 }
                 else if (item.Contains(",") && !item.StartsWith("A"))
                 {
-                    tempItem = TranslateXandY(item, xChange, yChange);
+                    tempItem = TranslateXAndY(item, xChange, yChange);
                 }
                 else
                 {
                     tempItem = item;
                 }
+
                 sb.Append(tempItem).Append(" ");
             }
+
             return sb.ToString().Trim();
         }
 
@@ -128,7 +131,7 @@ namespace dotnetCampus.Svg2XamlTool
         /// <param name="xChange"></param>
         /// <param name="yChange"></param>
         /// <returns></returns>
-        private static string TranslateXandY(string item, double xChange, double yChange)
+        private static string TranslateXAndY(string item, double xChange, double yChange)
         {
             var num = item.Split(',');
             var sb = new StringBuilder();
@@ -153,7 +156,7 @@ namespace dotnetCampus.Svg2XamlTool
         /// <returns></returns>
         private static string TranslateXorY(string item, double xChange, double yChange)
         {
-            var tempItem = String.Empty;
+            var tempItem = string.Empty;
             if (item.StartsWith("H"))
             {
                 var x = Convert.ToDouble(item.Substring(1));
@@ -164,6 +167,7 @@ namespace dotnetCampus.Svg2XamlTool
                 var y = Convert.ToDouble(item.Substring(1));
                 tempItem = "V" + (y + yChange);
             }
+
             return tempItem;
         }
 
@@ -193,10 +197,11 @@ namespace dotnetCampus.Svg2XamlTool
                     {
                         startIndex = 1;
                     }
+
                     var commaIndex = items[i].IndexOf(',');
                     double x = Convert.ToDouble(items[i].Substring(startIndex, commaIndex - startIndex));
-                    var ystring = items[i].Substring(commaIndex + 1);
-                    double y = Convert.ToDouble(ystring);
+                    var yString = items[i].Substring(commaIndex + 1);
+                    double y = Convert.ToDouble(yString);
 
                     var point = RotateAroundPoint(new Point(x, y), center, angle);
 
@@ -221,6 +226,7 @@ namespace dotnetCampus.Svg2XamlTool
             {
                 sb.Append(item).Append(" ");
             }
+
             return sb.ToString();
         }
 
@@ -268,18 +274,22 @@ namespace dotnetCampus.Svg2XamlTool
                             {
                                 startIndex = 1;
                             }
+
                             var commaIndex = items[j].IndexOf(',');
                             x = items[j].Substring(startIndex, commaIndex - startIndex);
                             break;
                         }
+
                         if (items[j].StartsWith("H"))
                         {
                             x = items[j].Substring(1);
                             break;
                         }
                     }
+
                     items[i] = $"L{x},{y}";
                 }
+
                 if (items[i].StartsWith("H"))
                 {
                     string x = items[i].Substring(1);
@@ -292,15 +302,18 @@ namespace dotnetCampus.Svg2XamlTool
                             y = items[j].Substring(commaIndex + 1);
                             break;
                         }
+
                         if (items[j].StartsWith("V"))
                         {
                             y = items[j].Substring(1);
                             break;
                         }
                     }
+
                     items[i] = $"L{x},{y}";
                 }
             }
+
             return items;
         }
 
@@ -359,7 +372,7 @@ namespace dotnetCampus.Svg2XamlTool
             var miniItemList = new List<object>();
             foreach (var item in items)
             {
-                if (Regex.IsMatch(item, "([MCQL]\\d+,\\d+)|(\\d+,\\d+)") && !item.StartsWith("A"))
+                if (Regex.IsMatch(item, $"([{StandardPrefix}]\\d+,\\d+)|(\\d+,\\d+)") && !item.StartsWith("A"))
                 {
                     var miniLangItem = new MiniLangItem(item);
                     if (isX)
@@ -370,6 +383,7 @@ namespace dotnetCampus.Svg2XamlTool
                     {
                         miniLangItem.Y = center.Y * 2 - miniLangItem.Y;
                     }
+
                     miniItemList.Add(miniLangItem);
                 }
                 else
@@ -410,8 +424,7 @@ namespace dotnetCampus.Svg2XamlTool
         private void XTranslateButton_OnClick(object sender, RoutedEventArgs e)
         {
             var text = XTranslateTextBox.Text.Trim();
-            double d;
-            if (Double.TryParse(text, out d))
+            if (double.TryParse(text, out var d))
             {
                 Translate(d, 0);
             }
@@ -420,8 +433,7 @@ namespace dotnetCampus.Svg2XamlTool
         private void YTranslateButton_OnClick(object sender, RoutedEventArgs e)
         {
             var text = YTranslateTextBox.Text.Trim();
-            double d;
-            if (Double.TryParse(text, out d))
+            if (double.TryParse(text, out var d))
             {
                 Translate(0, d);
             }
@@ -430,8 +442,7 @@ namespace dotnetCampus.Svg2XamlTool
         private void RotateButton_OnClick(object sender, RoutedEventArgs e)
         {
             var rotateText = RotateTextBox.Text.Trim();
-            double rotate;
-            if (Double.TryParse(rotateText, out rotate))
+            if (double.TryParse(rotateText, out var rotate))
             {
                 Rotate(rotate);
             }
@@ -439,9 +450,9 @@ namespace dotnetCampus.Svg2XamlTool
 
         private void AddGeometryButton_OnClick(object sender, RoutedEventArgs e)
         {
-            ContainerCanvas.Children.Add(new Path { Data = ShowerPath.Data, Stroke = Brushes.Teal, StrokeThickness = 1 });
+            ContainerCanvas.Children.Add(new Path {Data = ShowerPath.Data, Stroke = Brushes.Teal, StrokeThickness = 1});
             ShowerPath.Data = null;
-            GeometryTextBox.Text = String.Empty;
+            GeometryTextBox.Text = string.Empty;
         }
 
         private void ContainerCanvas_OnMouseMove(object sender, MouseEventArgs e)
@@ -471,7 +482,7 @@ namespace dotnetCampus.Svg2XamlTool
 
     class MiniLangItem
     {
-        public string Action { get; set; }
+        public string Action { get; }
         public double X { get; set; }
         public double Y { get; set; }
 
@@ -482,8 +493,9 @@ namespace dotnetCampus.Svg2XamlTool
                 Action = "Z";
                 return;
             }
+
             string numberString = item;
-            if ("MLAQC".Contains(item[0]))
+            if (GeometryToolView.StandardPrefix.Contains(item[0]))
             {
                 Action = item[0].ToString();
                 numberString = item.Substring(1);

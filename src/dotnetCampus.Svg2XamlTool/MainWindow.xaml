@@ -4,14 +4,17 @@
         xmlns:svg2XamlTool="clr-namespace:dotnetCampus.Svg2XamlTool"
         Title="SVG转XAML 3.0" Width="700" Height="600">
     <FrameworkElement.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </FrameworkElement.Resources>
     <Grid Name="ContainerGrid" AllowDrop="True" Drop="ContainerGrid_OnDrop" Background="Transparent">
-        <WrapPanel Name="IconsContainer"/>
+        <WrapPanel Name="IconsContainer" />
         <StackPanel VerticalAlignment="Center">
-            <TextBlock Name="HintText" Text="拖几个SVG到这里" Foreground="LightGray" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50"/>
+            <TextBlock Name="HintText" Text="拖几个SVG到这里" Foreground="LightGray" HorizontalAlignment="Center"
+                       VerticalAlignment="Center" FontSize="50" />
         </StackPanel>
-        <svg2XamlTool:GeometryToolView Visibility="{Binding IsChecked,ElementName=AdjustGeometryButton,Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        <ToggleButton Name="AdjustGeometryButton" Content="编辑" Width="50" Height="24" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="6"/>
+        <svg2XamlTool:GeometryToolView
+            Visibility="{Binding IsChecked,ElementName=AdjustGeometryButton,Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <ToggleButton Name="AdjustGeometryButton" Content="编辑" Width="50" Height="24" HorizontalAlignment="Right"
+                      VerticalAlignment="Top" Margin="6" />
     </Grid>
 </Window>

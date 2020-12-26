@@ -1,6 +1,8 @@
-﻿<UserControl x:Class="dotnetCampus.Svg2XamlTool.GeometryToolView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" Background="White">
+﻿<UserControl x:Class="dotnetCampus.Svg2XamlTool.GeometryToolView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" Background="White">
     <UserControl.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="FontSize" Value="14" />
@@ -13,20 +15,21 @@
             <Setter Property="Height" Value="24" />
         </Style>
         <Style TargetType="Button">
-            <Setter Property="Margin" Value="3 2"/>
-            <Setter Property="BorderBrush" Value="#F88F1C"/>
-            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="3 2" />
+            <Setter Property="BorderBrush" Value="#F88F1C" />
+            <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Height" Value="24" />
-            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Padding="6 3">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Border BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding BorderBrush}" Padding="6 3">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="BorderBrush" Value="#F9A549"/>
+                                <Setter Property="BorderBrush" Value="#F9A549" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter Property="BorderBrush" Value="#C67216" />
@@ -45,17 +48,19 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <Canvas Name="ContainerCanvas" Margin="0 0.06 0 10" Background="#EEE" MouseMove="ContainerCanvas_OnMouseMove"
+            <Canvas Name="ContainerCanvas" Margin="0 0.06 0 10" Background="#EEE"
+                    MouseMove="ContainerCanvas_OnMouseMove"
                     MouseLeftButtonDown="ContainerCanvas_OnMouseLeftButtonDown">
                 <Path Name="ShowerPath" Stroke="Teal" StrokeThickness="1" />
             </Canvas>
         </Grid>
         <Grid Grid.Row="1">
-            <TextBox Name="GeometryTextBox" Style="{x:Null}" Padding="3" FontSize="16" AcceptsReturn="True" TextWrapping="Wrap" />
+            <TextBox Name="GeometryTextBox" Style="{x:Null}" Padding="3" FontSize="16" AcceptsReturn="True"
+                     TextWrapping="Wrap" />
         </Grid>
         <StackPanel Grid.Row="2" Margin="4 8">
             <StackPanel Orientation="Horizontal">
-                <Button Name="BtnShow" Content="显示图形" Click="BtnShow_OnClick" />
+                <Button Name="ShowButton" Content="显示图形" Click="ShowButton_OnClick" />
                 <Button Name="ClearButton" Content="清空" Click="ClearButton_OnClick" />
                 <Button Name="HorizontalFlipButton" Content="水平翻转" Click="HorizontalFlipButton_OnClick" />
                 <Button Name="VerticalFlipButton" Content="垂直翻转" Click="VerticalFlipButton_OnClick" />
