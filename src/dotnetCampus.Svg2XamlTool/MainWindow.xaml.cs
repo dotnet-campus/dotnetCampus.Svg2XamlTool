@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -65,6 +66,7 @@ namespace dotnetCampus.Svg2XamlTool
                                     geometryDrawing.Geometry.Transform = drawingGroup.Transform;
                                 }
                             }
+
                             drawing = dr;
                         }
                         else
@@ -72,6 +74,7 @@ namespace dotnetCampus.Svg2XamlTool
                             break;
                         }
                     }
+
                     var drawingImage = new DrawingImage(drawing);
                     if (drawing is GeometryDrawing geometryDrawing1)
                     {
@@ -82,7 +85,9 @@ namespace dotnetCampus.Svg2XamlTool
                             {
                                 pathGeometry.Figures.Add(figure);
                             }
-                            var combineGeometry = Geometry.Combine(Geometry.Empty, pathGeometry, GeometryCombineMode.Union, geometryDrawing1.Geometry.Transform);
+
+                            var combineGeometry = Geometry.Combine(Geometry.Empty, pathGeometry,
+                                GeometryCombineMode.Union, geometryDrawing1.Geometry.Transform);
                             geometryDrawing1.Geometry = combineGeometry;
                             drawing = geometryDrawing1;
                         }
@@ -121,21 +126,49 @@ namespace dotnetCampus.Svg2XamlTool
                 var result = sb.ToString();
                 result = Regex.Replace(result, " svg:SvgLink.Key=\".*\"", string.Empty);
                 result = Regex.Replace(result, " svg:SvgObject.Id=\".*\"", string.Empty);
-                result = Regex.Replace(result, "<PathGeometry FillRule=\"EvenOdd\" Figures=\"([^T]*?)\" />", "<StreamGeometry>$1</StreamGeometry>");
+                result = Regex.Replace(result, "<PathGeometry FillRule=\"EvenOdd\" Figures=\"([^T]*?)\" />",
+                    "<StreamGeometry>$1</StreamGeometry>");
 
                 var tempXamlFile = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.xaml");
 
                 WriteToFile(result, tempXamlFile);
-                //将结果保存到临时文件夹中，并用默认应用打开
-                var processStartInfo = new ProcessStartInfo(tempXamlFile)
-                {
-                    UseShellExecute = true
-                };
-                Process.Start(processStartInfo);
+
+                TryOpenXamlFile(tempXamlFile);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 尝试打开 xaml 文件
+        /// </summary>
+        /// <param name="xamlFile"></param>
+        private static void TryOpenXamlFile(string xamlFile)
+        {
+            try
+            {
+                Process.Start("notepad.exe", xamlFile);
+                return;
+            }
+            catch (Win32Exception)
+            {
+                // 忽略
+            }
+
+            try
+            {
+                var processStartInfo = new ProcessStartInfo(xamlFile)
+                {
+                    UseShellExecute = true
+                };
+                Process.Start(processStartInfo);
+                return;
+            }
+            catch (Exception)
+            {
+                // 忽略
             }
         }
 
@@ -165,6 +198,7 @@ namespace dotnetCampus.Svg2XamlTool
 
                 xaml = Encoding.ASCII.GetString(xamlStream.ToArray());
             }
+
             return xaml;
         }
 
