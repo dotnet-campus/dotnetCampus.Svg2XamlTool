@@ -17,17 +17,17 @@ namespace dotnetCampus.Svg2XamlTool
     /// </summary>
     public partial class GeometryToolView : UserControl
     {
+        public GeometryToolView()
+        {
+            InitializeComponent();
+        }
+
         public const string StandardPrefix = "MCQL";
 
         public string MiniLang
         {
             get { return GeometryTextBox.Text.Trim(); }
             set { GeometryTextBox.Text = value; }
-        }
-
-        public GeometryToolView()
-        {
-            InitializeComponent();
         }
 
         private void ShowButton_OnClick(object sender, RoutedEventArgs e)
@@ -44,7 +44,7 @@ namespace dotnetCampus.Svg2XamlTool
                 ShowerPath.Data = geometry;
                 var bounds = geometry.Bounds;
                 InfoTextBlock.Text =
-                    $"起点 {(int) bounds.Left},{(int) bounds.Top}  宽高 {(int) bounds.Width},{(int) bounds.Height}";
+                    $"起点 {(int)bounds.Left},{(int)bounds.Top}  宽高 {(int)bounds.Width},{(int)bounds.Height}";
             }
             catch (Exception)
             {
@@ -136,7 +136,7 @@ namespace dotnetCampus.Svg2XamlTool
             var num = item.Split(',');
             var sb = new StringBuilder();
             int index = 0;
-            while (index < num.Length)
+            while (index < num.Length && index + 1 < num.Length)
             {
                 var x = Convert.ToDouble(num[index]);
                 var y = Convert.ToDouble(num[index + 1]);
@@ -450,7 +450,7 @@ namespace dotnetCampus.Svg2XamlTool
 
         private void AddGeometryButton_OnClick(object sender, RoutedEventArgs e)
         {
-            ContainerCanvas.Children.Add(new Path {Data = ShowerPath.Data, Stroke = Brushes.Teal, StrokeThickness = 1});
+            ContainerCanvas.Children.Add(new Path { Data = ShowerPath.Data, Stroke = Brushes.Teal, StrokeThickness = 1 });
             ShowerPath.Data = null;
             GeometryTextBox.Text = string.Empty;
         }
@@ -498,42 +498,6 @@ namespace dotnetCampus.Svg2XamlTool
             });
 
             ShowInPath(MiniLang);
-        }
-    }
-
-    class MiniLangItem
-    {
-        public string Action { get; }
-        public double X { get; set; }
-        public double Y { get; set; }
-
-        public MiniLangItem(string item)
-        {
-            if (item == "Z")
-            {
-                Action = "Z";
-                return;
-            }
-
-            string numberString = item;
-            if (GeometryToolView.StandardPrefix.Contains(item[0]))
-            {
-                Action = item[0].ToString();
-                numberString = item.Substring(1);
-            }
-
-            var numbers = numberString.Split(',');
-            var xString = numbers[0];
-            var yString = numbers[1];
-
-            X = Convert.ToDouble(xString);
-            Y = Convert.ToDouble(yString);
-        }
-
-        public override string ToString()
-        {
-            if (Action == "Z") return "Z";
-            return $"{Action}{X},{Y}";
         }
     }
 }
