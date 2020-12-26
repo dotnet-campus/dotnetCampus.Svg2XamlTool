@@ -6,6 +6,8 @@
         <UseWPF>True</UseWPF>
         <UseWindowsForms>true</UseWindowsForms>
         <OutputType>WinExe</OutputType>
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>Svg2Xaml</ToolCommandName>
     </PropertyGroup>
 
 </Project>
