@@ -237,15 +237,16 @@ namespace SharpVectors.Converters.Utils
                 }
 
                 DirectoryInfo targetInfo = null;
-                if (_includeSecurity)
-                {
-                    targetInfo = target.CreateSubdirectory(sourceInfo.Name,
-                        sourceInfo.GetAccessControl());
-                }
-                else
-                {
-                    targetInfo = target.CreateSubdirectory(sourceInfo.Name);
-                }
+                // 不适用的代码
+                //if (_includeSecurity)
+                //{
+                //    targetInfo = target.CreateSubdirectory(sourceInfo.Name,
+                //        sourceInfo.GetAccessControl());
+                //}
+                //else
+                //{
+                targetInfo = target.CreateSubdirectory(sourceInfo.Name);
+                //}
                 targetInfo.Attributes = fileAttr;
 
                 Copy(sourceInfo, targetInfo);
@@ -281,11 +282,12 @@ namespace SharpVectors.Converters.Utils
                 fi.CopyTo(filePath, _isOverwrite);
 
                 File.SetAttributes(filePath, fileAttr);
-                // if required to set the security or access control
-                if (_includeSecurity)
-                {
-                    File.SetAccessControl(filePath, fi.GetAccessControl());
-                }
+                // 不适用的代码
+                //// if required to set the security or access control
+                //if (_includeSecurity)
+                //{
+                //    File.SetAccessControl(filePath, fi.GetAccessControl());
+                //}
             }
         }
 

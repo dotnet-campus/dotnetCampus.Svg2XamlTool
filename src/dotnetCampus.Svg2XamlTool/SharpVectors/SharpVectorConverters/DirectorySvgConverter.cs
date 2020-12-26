@@ -24,7 +24,7 @@ namespace SharpVectors.Converters
         private bool _isOverwrite;
         private bool _isRecursive;
         private bool _includeHidden;
-        private bool _includeSecurity;
+        private bool _includeSecurity = false;
 
         private bool _writerErrorOccurred;
         private bool _fallbackOnWriterError;
@@ -345,15 +345,16 @@ namespace SharpVectors.Converters
                 }
 
                 DirectoryInfo targetInfo = null;
-                if (_includeSecurity)
-                {
-                    targetInfo = target.CreateSubdirectory(sourceInfo.Name,
-                        sourceInfo.GetAccessControl());
-                }
-                else
-                {
-                    targetInfo = target.CreateSubdirectory(sourceInfo.Name);
-                }
+                // 不适用的代码
+                //if (_includeSecurity)
+                //{
+                //    targetInfo = target.CreateSubdirectory(sourceInfo.Name,
+                //        sourceInfo.GetAccessControl());
+                //}
+                //else
+                //{
+                targetInfo = target.CreateSubdirectory(sourceInfo.Name);
+                //}
                 targetInfo.Attributes = fileAttr;
 
                 this.ProcessConversion(sourceInfo, targetInfo);
@@ -396,11 +397,12 @@ namespace SharpVectors.Converters
                         fileConverter.Convert(svgFileName, xamlFilePath);
 
                         File.SetAttributes(xamlFilePath, fileAttr);
-                        // if required to set the security or access control
-                        if (_includeSecurity)
-                        {
-                            File.SetAccessControl(xamlFilePath, File.GetAccessControl(svgFileName));
-                        }
+                        // 不适用的代码
+                        //// if required to set the security or access control
+                        //if (_includeSecurity)
+                        //{
+                        //    File.SetAccessControl(xamlFilePath, File.GetAccessControl(svgFileName));
+                        //}
 
                         _convertedCount++;
 
