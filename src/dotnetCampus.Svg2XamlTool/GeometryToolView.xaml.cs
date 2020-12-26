@@ -392,7 +392,7 @@ namespace dotnetCampus.Svg2XamlTool
                 }
             }
 
-            MiniLang = String.Join(" ", miniItemList);
+            MiniLang = string.Join(" ", miniItemList);
 
             if (Regex.IsMatch(MiniLang, @"(A\d+,\d+ \d \d) 0"))
             {

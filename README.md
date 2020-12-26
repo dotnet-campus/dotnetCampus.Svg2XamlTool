@@ -12,6 +12,18 @@
 
 ![](docs/images/Image2.png)
 
+## 安装
+
+```
+dotnet tool install -g dotnetCampus.Svg2XamlTool
+```
+
+## 使用
+
+```
+Svg2Xaml
+```
+
 ## 作者
 
 [@fujinxiang](https://github.com/fujinxiang)
