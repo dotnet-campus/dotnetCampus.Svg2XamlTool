@@ -77,6 +77,10 @@
 
                 <TextBox Name="RotateTextBox" Text="45" />
                 <Button Name="RotateButton" Content="旋转" Click="RotateButton_OnClick" />
+
+                <TextBox x:Name="ScaleTextBox" Text="0.5"/>
+                <Button x:Name="ScaleButton" Content="缩放" Click="ScaleButton_OnClick"></Button>
+
                 <TextBlock Name="PointTextBlock" Foreground="Crimson" Margin="20 0" />
             </StackPanel>
         </StackPanel>

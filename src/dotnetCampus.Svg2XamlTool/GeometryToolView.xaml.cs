@@ -333,7 +333,7 @@ namespace dotnetCampus.Svg2XamlTool
 
         private void Transform(double x, double y, Func<string, double, double, string> func)
         {
-            if (String.IsNullOrWhiteSpace(MiniLang)) return;
+            if (string.IsNullOrWhiteSpace(MiniLang)) return;
             MiniLang = func(MiniLang, x, y);
             MiniLang = FormattedMiniLanguage(MiniLang);
             ShowInPath(MiniLang);
@@ -477,6 +477,27 @@ namespace dotnetCampus.Svg2XamlTool
 
             ShowerPath.Data = null;
             GeometryTextBox.Text = string.Empty;
+        }
+
+        private void ScaleButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            MiniLang = Regex.Replace(MiniLang, "(\\d+\\.\\d*)", match =>
+            {
+                if (double.TryParse(match.Groups[1].Value, out var number))
+                {
+                    var text = ScaleTextBox.Text.Trim();
+
+                    if (double.TryParse(text, out var scale))
+                    {
+                        number *= scale;
+                        return number.ToString(CultureInfo.InvariantCulture);
+                    }
+                }
+
+                return match.Groups[0].Value;
+            });
+
+            ShowInPath(MiniLang);
         }
     }
 
