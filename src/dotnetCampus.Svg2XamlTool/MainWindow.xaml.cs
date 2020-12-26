@@ -26,7 +26,6 @@ namespace dotnetCampus.Svg2XamlTool
         }
 
         private readonly FileSvgReader _fileSvgReader;
-        private readonly string _tempXamlFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Temp", "Svg2XamlTemp.xaml");
 
         /// <summary>
         /// 处理拖拽导入的SVG文件
@@ -124,9 +123,11 @@ namespace dotnetCampus.Svg2XamlTool
                 result = Regex.Replace(result, " svg:SvgObject.Id=\".*\"", string.Empty);
                 result = Regex.Replace(result, "<PathGeometry FillRule=\"EvenOdd\" Figures=\"([^T]*?)\" />", "<StreamGeometry>$1</StreamGeometry>");
 
-                WriteToFile(result, _tempXamlFile);
+                var tempXamlFile = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.xaml");
+
+                WriteToFile(result, tempXamlFile);
                 //将结果保存到临时文件夹中，并用默认应用打开
-                var processStartInfo = new ProcessStartInfo(_tempXamlFile)
+                var processStartInfo = new ProcessStartInfo(tempXamlFile)
                 {
                     UseShellExecute = true
                 };
