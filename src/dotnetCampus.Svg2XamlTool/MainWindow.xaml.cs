@@ -120,8 +120,8 @@ namespace dotnetCampus.Svg2XamlTool
 
 
                 var result = sb.ToString();
-                result = Regex.Replace(result, " svg:SvgLink.Key=\".*\"", String.Empty);
-                result = Regex.Replace(result, " svg:SvgObject.Id=\".*\"", String.Empty);
+                result = Regex.Replace(result, " svg:SvgLink.Key=\".*\"", string.Empty);
+                result = Regex.Replace(result, " svg:SvgObject.Id=\".*\"", string.Empty);
                 result = Regex.Replace(result, "<PathGeometry FillRule=\"EvenOdd\" Figures=\"([^T]*?)\" />", "<StreamGeometry>$1</StreamGeometry>");
 
                 WriteToFile(result, _tempXamlFile);
