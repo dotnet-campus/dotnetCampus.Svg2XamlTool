@@ -114,8 +114,8 @@ namespace dotnetCampus.Svg2XamlTool
 
                 //替换掉不需要的字符串
                 sb.Replace(" xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"", string.Empty);
-                sb.Replace(" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\"", String.Empty);
-                sb.Replace(" xmlns:svg=\"http://sharpvectors.codeplex.com/runtime/\"", String.Empty);
+                sb.Replace(" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\"", string.Empty);
+                sb.Replace(" xmlns:svg=\"http://sharpvectors.codeplex.com/runtime/\"", string.Empty);
                 sb.Replace(" Pen=\"{x:Null}\"", string.Empty);
 
 
@@ -125,8 +125,12 @@ namespace dotnetCampus.Svg2XamlTool
                 result = Regex.Replace(result, "<PathGeometry FillRule=\"EvenOdd\" Figures=\"([^T]*?)\" />", "<StreamGeometry>$1</StreamGeometry>");
 
                 WriteToFile(result, _tempXamlFile);
-                //将结果保存到临时文件夹中，并用记事本打开
-                Process.Start("notepad.exe", _tempXamlFile);
+                //将结果保存到临时文件夹中，并用默认应用打开
+                var processStartInfo = new ProcessStartInfo(_tempXamlFile)
+                {
+                    UseShellExecute = true
+                };
+                Process.Start(processStartInfo);
             }
             catch (Exception ex)
             {
