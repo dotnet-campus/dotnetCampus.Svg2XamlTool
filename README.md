@@ -33,3 +33,7 @@ Svg2Xaml
 ## 第三方引用
 
 - SharpVectors https://github.com/dotnet-campus/SharpVectors
+
+## 相似的项目
+
+[wieslawsoltes/SvgToXaml: Svg to xaml conveter.](https://github.com/wieslawsoltes/SvgToXaml )
